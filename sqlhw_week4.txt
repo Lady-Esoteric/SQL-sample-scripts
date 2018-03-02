@@ -1,0 +1,65 @@
+#############################
+#1Create the SQL_HW4 database
+#############################
+input:
+CREATE DATABASE SQL_HW4;
+output:
+Query OK, 1 row affected (0.05 sec)
+
+#######################################################
+#Creation of the tables: employee, department, project)
+#######################################################
+input:
+CREATE TABLE employee
+(
+SSN varchar(11) NOT NULL,
+Fname char NOT NULL,
+Lname char NOT NULL,
+Salary int NOT NULL,
+PRIMARY KEY (SSN)); 
+
+output(describe):
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| SSN    | varchar(11) | NO   | PRI | NULL    |       |
+| Fname  | char(1)     | NO   |     | NULL    |       |
+| Lname  | char(1)     | NO   |     | NULL    |       |
+| Salary | int(11)     | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+input:
+CREATE TABLE department
+(
+D_num INT NOT NULL,
+D_name CHAR NOT NULL,
+Location CHAR NOT NULL,
+SSN VARCHAR NOT NULL,
+PRIMARY KEY (D_num),
+CONSTRAINT FOREIGN KEY (SSN)
+REFERENCES 'employee'(SSN)
+) ENGINE=INNODB;
+
+output:
+
+
+
+input:
+CREATE TABLE project
+(
+P_num int NOT NULL AUTO_INCREMENT,
+P_name char NOT NULL,
+Budget varchar NOT NULL,
+D_num int NOT NULL,
+SSN int NOT NULL,
+PRIMARY KEY (P_num)
+ADD CONSTRAINT 'D_num'
+FOREIGN KEY (D_num)
+REFERENCES 'department' (D_num)
+ADD CONSTRAINT 'SSN'
+FOREIGN KEY (SSN)
+REFERENCES 'employee' (SSN));
+
+output:
+

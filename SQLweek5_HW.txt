@@ -1,0 +1,147 @@
+Benet Morando, BIS 235, NT4 Prof.Finnegan Week 5-SQL HW
+###################################################
+#1 Finding the customer IDs of all of the customers
+who have ordered the product whose ID is 'TNT2'
+###################################################
+Input:
+
+SELECT orders.cust_id, orderitems.prod_id
+FROM orderitems 
+LEFT JOIN orders ON orders.order_num = orderitems.order_num
+WHERE prod_id = 'TNT2';
+
+Outuput:
+
++---------+---------+
+| cust_id | prod_id |
++---------+---------+
+|   10001 | TNT2    |
+|   10004 | TNT2    |
++---------+---------+
+2 rows in set (0.00 sec)
+
+
+###################################################
+#2 Find the customer names and cust_contacts for 
+all of the customers who have ordered the product
+whose id is 'TNT2'
+###################################################
+Input:
+
+CREATE VIEW TNT2customers AS
+SELECT customers.cust_name AS 'Customer Name', 
+customers.cust_contact AS 'Customer Contact',
+orderitems.prod_id AS 'Product Ordered'
+FROM customers
+LEFT JOIN orders ON orders.cust_id = customers.cust_id
+LEFT JOIN orderitems ON orders.order_num = orderitems.order_num
+WHERE prod_id = 'TNT2';
+
+SELECT * FROM TNT2customers;
+
+Output:
+
++----------------+------------------+-----------------+
+| Customer Name  | Customer Contact | Product Ordered |
++----------------+------------------+-----------------+
+| Coyote Inc.    | Y Lee            | TNT2            |
+| Yosemite Place | Y Sam            | TNT2            |
++----------------+------------------+-----------------+
+2 rows in set (0.00 sec)
+
+#################################################
+#3 Return all of the vendors, the products they
+sell and their respective prices. Return the 
+results ordered alphabetically, first by vendor 
+name, then by product name
+###############################################
+Input:
+
+CREATE VIEW VendorsWProducts AS 
+SELECT vendors.vend_name AS 'Vendor',
+products.prod_name AS 'Product',
+products.prod_price AS 'Product Price'
+FROM products LEFT JOIN vendors ON vendors.vend_id = products.vend_id
+ORDER BY vendors.vend_name;
+
+SELECT * FROM VendorsWProducts;
+
+Output:
+
++-------------+----------------+---------------+
+| Vendor      | Product        | Product Price |
++-------------+----------------+---------------+
+| ACME        | TNT (1 stick)  |          2.50 |
+| ACME        | TNT (5 sticks) |         10.00 |
+| ACME        | Detonator      |         13.00 |
+| ACME        | Bird seed      |         10.00 |
+| ACME        | Safe           |         50.00 |
+| ACME        | Carrots        |          2.50 |
+| ACME        | Sling          |          4.49 |
+| Anvils R Us | 2 ton anvil    |         14.99 |
+| Anvils R Us | .5 ton anvil   |          5.99 |
+| Anvils R Us | 1 ton anvil    |          9.99 |
+| Jet Set     | JetPack 1000   |         35.00 |
+| Jet Set     | JetPack 2000   |         55.00 |
+| LT Supplies | Oil can        |          8.99 |
+| LT Supplies | Fuses          |          3.42 |
++-------------+----------------+---------------+
+14 rows in set (0.00 sec)
+
+####################################################
+#4 Display the product name, vendor name, product 
+price and quantity ordered for order number 2005
+####################################################
+Input:
+
+CREATE VIEW Order20005 AS
+SELECT products.prod_name AS 'Product Name',
+vendors.vend_name AS 'Vendor',
+orderitems.item_price AS 'Price',
+orderitems.quantity AS 'Quantity'
+FROM orderitems
+LEFT JOIN orders ON orders.order_num = orderitems.order_num
+LEFT JOIN products ON orderitems.prod_id = products.prod_id
+LEFT JOIN vendors ON vendors.vend_id = products.vend_id
+WHERE orderitems.order_num = '20005';
+
+SELECT * FROM Order20005;
+
+
+Output:
+
++----------------+-------------+-------+----------+
+| Product Name   | Vendor      | Price | Quantity |
++----------------+-------------+-------+----------+
+| .5 ton anvil   | Anvils R Us |  5.99 |       10 |
+| 1 ton anvil    | Anvils R Us |  9.99 |        3 |
+| TNT (5 sticks) | ACME        | 10.00 |        5 |
+| Bird seed      | ACME        | 10.00 |        1 |
++----------------+-------------+-------+----------+
+4 rows in set (0.00 sec)
+
+####################################################
+#5 which customers have placed orders for products
+that have a product note associated with them?
+####################################################
+Input:
+
+CREATE VIEW ProdNotesOnly AS
+SELECT customers.cust_name AS 'Customer',
+orders.order_num AS 'Order',
+products.prod_name AS 'Item Ordered'
+FROM orderitems
+LEFT JOIN orders ON orders.order_num = orderitems.order_num
+LEFT JOIN productnotes ON productnotes.prod_id = orderitems.prod_id
+LEFT JOIN customers ON customers.cust_id = orders.cust_id
+LEFT JOIN products ON products.prod_price = orderitems.item_price
+Where productnotes.note_text = 'NOT NULL';
+
+SELECT * FROM ProdNotesOnly;
+
+Output:
+Empty set (0.00 sec)
+
+
+
+

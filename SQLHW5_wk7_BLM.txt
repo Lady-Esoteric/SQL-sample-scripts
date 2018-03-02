@@ -1,0 +1,119 @@
+nSQL HW5 week 7-Benet Morando-Prof. Brian- BIS 235
+#################################################################
+#1 to find the average cast of all products in the product table:
+#################################################################
+Input:
+
+SELECT AVG(prod_price) AS 'Average Product Price' 
+FROM products;
+
+Output:
+
++-----------------------+
+| Average Product Price |
++-----------------------+
+|             16.133571 |
++-----------------------+
+1 row in set (0.02 sec)
+
+###############################################################
+#2 to find the most expensive product in the products table is:
+###############################################################
+Input:
+
+SELECT MAX(prod_price) AS 'Most Expensive Item'
+FROM products;
+
+Output:
+
++---------------------+
+| Most Expensive Item |
++---------------------+
+|               55.00 |
++---------------------+
+1 row in set (0.00 sec)
+
+##############################################################
+#3 to find the average cost of the items in order number 20005
+##############################################################
+Input:
+
+SELECT AVG(products.prod_price) AS 'Average for Order 20005'
+FROM orderitems
+LEFT JOIN products ON orderitems.prod_id = products.prod_id
+WHERE orderitems.order_num = '20005';
+
+Output:
+
++-------------------------+
+| Average for Order 20005 |
++-------------------------+
+|                8.995000 |
++-------------------------+
+1 row in set (0.01 sec)
+
+###################################################
+#4 to find the total quantity of items unit ordered 
+accross all item ordered in order number 20005
+###################################################
+Input:
+
+SELECT SUM(quantity) AS 'Order 20005 Total Quantity' 
+FROM orderitems
+WHERE order_num = '20005';
+
+Output:
+
++----------------------------+
+| Order 20005 Total Quantity |
++----------------------------+
+|                         19 |
++----------------------------+
+1 row in set (0.00 sec)
+
+############################################
+#5 to find the average price of the products 
+in the productstale that cost over $10.00
+############################################
+Input:
+
+SELECT AVG(prod_price) AS 'Products Over 10.00' 
+FROM products
+WHERE prod_price > 10.00;
+
+Output:
+
++---------------------+
+| Products Over 10.00 |
++---------------------+
+|           33.598000 |
++---------------------+
+1 row in set (0.00 sec)
+
+##########################################################
+#6 to provide a count of the number of products each vendor
+supplies along with the average price of the products
+provided per vendor for vendor located in the USA. Order
+the output by vendor with the most products to the vendor 
+with the least products
+##########################################################
+Input:
+
+SELECT vendors.vend_name AS 'Vendor', AVG(products.prod_price) AS 'Average Price', 
+COUNT(products.prod_id) AS 'Product Count' 
+FROM products 
+LEFT JOIN vendors ON products.vend_id = vendors.vend_id
+WHERE vend_country = 'USA'
+GROUP BY vendors.vend_name;
+
+
+Output:
+
++-------------+---------------+---------------+
+| Vendor      | Average Price | Product Count |
++-------------+---------------+---------------+
+| ACME        |     13.212857 |             7 |
+| Anvils R Us |     10.323333 |             3 |
+| LT Supplies |      6.205000 |             2 |
++-------------+---------------+---------------+
+3 rows in set (0.00 sec)
